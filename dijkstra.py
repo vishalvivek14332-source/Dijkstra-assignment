@@ -30,11 +30,15 @@ def dijkstra(start):
     parent = [-1] * num_vertices
 
     dist[start] = 0
-
     table_rows = []
 
     for step in range(num_vertices):
         u = min_distance(dist, visited)
+
+        # 🔴 FIX: Stop if no reachable vertex left
+        if u == -1:
+            break
+
         visited[u] = True
 
         # Save table row
@@ -74,8 +78,11 @@ for step, visited_node, row in table:
 
 print("\nShortest Paths from Node 0:\n")
 for i in range(num_vertices):
-    path = get_path(parents, i)
-    print(f"To Node {i}: {path}  (Distance: {int(distances[i])})")
+    if distances[i] == math.inf:
+        print(f"To Node {i}: No Path")
+    else:
+        path = get_path(parents, i)
+        print(f"To Node {i}: {path}  (Distance: {int(distances[i])})")
 
 # ---------------- SAVE TO FILE ----------------
 
@@ -90,7 +97,10 @@ with open("dijkstra_output.txt", "w", encoding="utf-8") as f:
     f.write("\nShortest Paths from Node 0:\n\n")
 
     for i in range(num_vertices):
-        path = get_path(parents, i)
-        f.write(f"To Node {i}: {path}  (Distance: {int(distances[i])})\n")
+        if distances[i] == math.inf:
+            f.write(f"To Node {i}: No Path\n")
+        else:
+            path = get_path(parents, i)
+            f.write(f"To Node {i}: {path}  (Distance: {int(distances[i])})\n")
 
 print("\nOutput saved to dijkstra_output.txt")
